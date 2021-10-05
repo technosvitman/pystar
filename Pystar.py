@@ -1,5 +1,6 @@
 
 from graph import *
+import time
 
 
 '''
@@ -20,18 +21,18 @@ class Pystar():
     '''
     def __buildPath(self, path):
         idx = path.indexof(self.target)
-        while path[idx] != self.start :
-            while path[idx - 1] not in path[idx]:
+        path = path[:idx+1]
+        while path[idx] != self.start and idx > 0 :
+            while path[idx - 1] not in path[idx] and idx > 0:
                 path.pop(idx-1)
+                idx = idx - 1
             idx = idx - 1
         return path
-            
-            
         
     '''
         @brief find short path
     '''
-    def findPath(self):
+    def originalfindPath(self):
         self.start.h = 0
         self.start.c = 0
         path = NodeList()
@@ -50,6 +51,31 @@ class Pystar():
                         ne.h = ne.c + ( ne - self.target ) 
                         worklist.append(ne)
             path.append(n)
+        return None
+        
+    '''
+        @brief find short path
+    '''
+    def findPath(self):
+        self.start.h = 0
+        self.start.c = 0
+        path = NodeList()
+        path.append(self.start)
+        i = 0
+        while i < len(path):
+            n = path[i]
+            if n == self.target : 
+                return self.__buildPath(path)
+            else:
+                i+=1
+                for ne in n :
+                    neidx = path.indexof(ne)
+                    if not(neidx >= 0 and path[neidx].c < n.c ) :
+                        ne.c = n.c + 1
+                        ne.h = ne.c + ( ne - self.target ) 
+                        if neidx >=0:
+                            i = neidx
+                        path.append(ne)
         return None
 
 nl = NodeList()
@@ -128,4 +154,11 @@ nl.link(27, 28)
 
 
 star = Pystar(nl[7], nl[14])
+print("====>")
+now = time.time()
+print(star.originalfindPath())
+print(time.time()-now)
+print("====>")
+now = time.time()
 print(star.findPath())
+print(time.time()-now)
