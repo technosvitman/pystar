@@ -7,14 +7,18 @@ import time
     @brief graph compute class
 '''
 class Pystar():
+    METHOD_ASTAR=0
+    METHOD_PYSTAR=1
+
     '''
         @brief initialize pystar
         @param start the start point
         @param target the target point
     '''
-    def __init__(self, start : Node, target : Node):
+    def __init__(self, start : Node, target : Node, method=METHOD_PYSTAR):
         self.start = start
         self.target = target
+        self.__method=method
         
     '''
         @brief buildPath
@@ -30,9 +34,9 @@ class Pystar():
         return path
         
     '''
-        @brief find short path
+        @brief find short path using A* algorithm
     '''
-    def originalfindPath(self):
+    def __computeAstar(self):
         self.start.h = 0
         self.start.c = 0
         path = NodeList()
@@ -48,15 +52,15 @@ class Pystar():
                     neidx = worklist.indexof(ne)
                     if not( ne in path or (neidx >= 0 and worklist[idx].c < n.c ) ) :
                         ne.c = n.c + 1
-                        ne.h = ne.c + ( ne - self.target ) 
+                        ne.h = ne.c + ( ne - self.target )
                         worklist.append(ne)
             path.append(n)
         return None
         
     '''
-        @brief find short path
+        @brief find short path using PyStar algorythm
     '''
-    def findPath(self):
+    def __computePyStar(self):
         self.start.h = 0
         self.start.c = 0
         path = NodeList()
@@ -75,90 +79,16 @@ class Pystar():
                         ne.h = ne.c + ( ne - self.target ) 
                         if neidx >=0:
                             i = neidx
-                        path.append(ne)
+                        path.insert(ne, i+1)
         return None
-
-nl = NodeList()
-
-# 0 5
-nl.append(Node(2,0))
-nl.append(Node(3,0))
-nl.append(Node(4,0))
-nl.append(Node(5,0))
-nl.append(Node(6,0))
-nl.append(Node(7,0))
-
-# 6 14
-nl.append(Node(0,1))
-nl.append(Node(1,1))
-nl.append(Node(2,1))
-nl.append(Node(3,1))
-nl.append(Node(4,1))
-nl.append(Node(5,1))
-nl.append(Node(6,1))
-nl.append(Node(7,1))
-nl.append(Node(8,1))
-
-# 15 20
-nl.append(Node(2,2))
-nl.append(Node(3,2))
-nl.append(Node(4,2))
-nl.append(Node(5,2))
-nl.append(Node(6,2))
-nl.append(Node(7,2))
-
-# 21 26
-nl.append(Node(2,3))
-nl.append(Node(3,3))
-nl.append(Node(4,3))
-nl.append(Node(5,3))
-nl.append(Node(6,3))
-nl.append(Node(7,3))
-
-# 27 28
-nl.append(Node(0,4))
-nl.append(Node(8,4))
-
-nl.link(0, 1)
-nl.link(0, 8)
-nl.link(1, 2)
-nl.link(2, 3)
-nl.link(3, 4)
-nl.link(4, 5)
-
-nl.link(6, 27)
-nl.link(6, 7)
-nl.link(7, 8)
-nl.link(8, 15)
-nl.link(9, 16)
-nl.link(10, 17)
-nl.link(11, 18)
-nl.link(12, 19)
-nl.link(13, 20)
-nl.link(14, 28)
-
-nl.link(15, 21)
-nl.link(16, 22)
-nl.link(17, 23)
-nl.link(18, 24)
-nl.link(19, 25)
-nl.link(20, 26)
-
-nl.link(21, 22)
-nl.link(22, 23)
-nl.link(23, 24)
-nl.link(24, 25)
-nl.link(25, 26)
-
-nl.link(27, 28)
-
-
-star = Pystar(nl[7], nl[14])
-print("====>")
-now = time.time()
-print(star.originalfindPath())
-print(time.time()-now)
-print("====>")
-now = time.time()
-print(star.findPath())
-print(time.time()-now)
+    
+    ''' 
+        @brief find path using selected method
+    '''
+    def findPath(self):
+        if self.__method == Pystar.METHOD_ASTAR:
+            return self.__computeAstar()
+        elif self.__method == Pystar.METHOD_PYSTAR:
+            return self.__computePyStar()
+        else:
+            return None

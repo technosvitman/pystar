@@ -36,6 +36,15 @@ class NodeList():
             self.nodes.append(node)
 
     '''
+        @brief insert item
+        @param node the node to append
+        @param index insertion index
+    '''
+    def insert(self, node, index) :
+        if node not in self :
+            self.nodes.insert(index, node)
+
+    '''
         @brief pop item
         @param idx the idx to pop
     '''
