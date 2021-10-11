@@ -1,5 +1,5 @@
 
-from graph import *
+from .graph import *
 import time
 
 
@@ -15,7 +15,7 @@ class Pystar():
         @param start the start point
         @param target the target point
     '''
-    def __init__(self, start : Node, target : Node, method=METHOD_PYSTAR):
+    def __init__(self, start : Node, target : Node, method=METHOD_ASTAR):
         self.start = start
         self.target = target
         self.__method=method
@@ -50,7 +50,7 @@ class Pystar():
             else:
                 for ne in n :
                     neidx = worklist.indexof(ne)
-                    if not( ne in path or (neidx >= 0 and worklist[idx].c < n.c ) ) :
+                    if not( ne in path or (neidx >= 0 and worklist[neidx].c < n.c ) ) :
                         ne.c = n.c + 1
                         ne.h = ne.c + ( ne - self.target )
                         worklist.append(ne)

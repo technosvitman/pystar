@@ -1,4 +1,4 @@
 
 from .Pystar        import Pystar
-from .Graph         import *
+from .graph         import *
 

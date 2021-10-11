@@ -36,6 +36,24 @@ class Node():
             node.append(self)
 
     '''
+        @brief unlink to all neighbour
+        @param node the node to append
+    '''
+    def remove(self, node) :
+        for n in self.neighbours :
+            if n == node:
+                del(n)
+
+    '''
+        @brief unlink to all neighbour
+        @param node the node to append
+    '''
+    def unlink(self) :
+        while len(self.neighbours) : 
+            node = self.neighbours.pop()
+            node.remove(self)
+
+    '''
         @brief get distance
         @param value the other value
         @return the result
